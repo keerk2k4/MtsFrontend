@@ -24,6 +24,7 @@ export class Accountinfo {
   ngOnInit(): void {
     if (this.isBrowser) {
       const storedId = sessionStorage.getItem('auth_account_id');
+      console.log('accountinfo ngOnInit isBrowser=', this.isBrowser, 'storedId=', storedId);
       if (storedId) this.accountId = Number(storedId);
     }
   }

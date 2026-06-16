@@ -31,6 +31,7 @@ export class Login {
       next: () => {
         if (this.isBrowser) {
           sessionStorage.setItem('auth_account_id', this.accountId);
+          console.log('login: set auth_account_id =', sessionStorage.getItem('auth_account_id'));
         }
         this.router.navigate(['/home']);
 },
