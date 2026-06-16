@@ -1,0 +1,77 @@
+<div class="reward-history-container">
+  <div class="reward-history-card">
+    <div class="history-header">
+      <h2>Reward History</h2>
+      <button class="refresh-btn" (click)="refresh()" [disabled]="loading" title="Refresh">
+        <span *ngIf="!loading">🔄</span>
+        <span *ngIf="loading">⏳</span>
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-message">
+      Loading reward history...
+    </div>
+
+    <div *ngIf="error && !loading" class="error-message">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && rewardTransactions.length === 0" class="empty-message">
+      <p>No reward transactions yet. Start making transfers to earn reward points!</p>
+      <p class="tip">💡 Transfer more than ₹100 to different accounts to earn reward points.</p>
+    </div>
+
+    <div *ngIf="!loading && rewardTransactions.length > 0" class="history-content">
+      <div class="summary-section">
+        <div class="summary-item">
+          <span class="summary-label">Total Transactions:</span>
+          <span class="summary-value">{{ rewardTransactions.length }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Visible Points:</span>
+          <span class="summary-value">{{ getTotalVisiblePoints() }}</span>
+        </div>
+      </div>
+
+      <div class="transactions-list">
+        <div *ngFor="let transaction of getVisibleTransactions()" class="transaction-item">
+          <div class="transaction-header">
+            <div class="transaction-to">
+              <span class="label">Transferred To:</span>
+              <span class="account-id">Account #{{ transaction.toAccountId }}</span>
+            </div>
+            <div class="transaction-date">
+              {{ transaction.createdOn | date: 'short' }}
+            </div>
+          </div>
+
+          <div class="transaction-details">
+            <div class="detail-row">
+              <span class="detail-label">Transfer Amount:</span>
+              <span class="detail-value">₹{{ transaction.transferAmount | number: '1.2-2' }}</span>
+            </div>
+            <div class="detail-row points-earned">
+              <span class="detail-label">Points Earned:</span>
+              <span class="detail-value points-badge">+{{ transaction.pointsEarned }}</span>
+            </div>
+          </div>
+
+          <div class="transaction-calculation">
+            <span class="calculation-text">
+              ₹{{ transaction.transferAmount | number: '1.2-2' }} ÷ ₹100 = {{ transaction.pointsEarned }} points
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination-controls" *ngIf="rewardTransactions.length > 5">
+        <button *ngIf="hasMore()" class="load-more-btn" (click)="showMore()">
+          Load More ({{ rewardTransactions.length - displayCount }} more)
+        </button>
+        <button *ngIf="displayCount > 5" class="show-less-btn" (click)="showLess()">
+          Show Less
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

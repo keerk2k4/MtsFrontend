@@ -1,0 +1,53 @@
+<div class="reward-info-container">
+  <div class="reward-info-card">
+    <div class="reward-header">
+      <h2>Your Reward Points</h2>
+      <button class="refresh-btn" (click)="refresh()" [disabled]="loading" title="Refresh">
+        <span *ngIf="!loading">🔄</span>
+        <span *ngIf="loading">⏳</span>
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-message">
+      Loading reward points...
+    </div>
+
+    <div *ngIf="error && !loading" class="error-message">
+      {{ error }}
+    </div>
+
+    <div *ngIf="rewardPoints && !loading" class="reward-details">
+      <div class="points-section">
+        <div class="points-display">
+          <div class="points-number">{{ rewardPoints.totalPoints }}</div>
+          <div class="points-label">Total Points Earned</div>
+        </div>
+
+        <div class="reward-info-items">
+          <div class="info-item">
+            <span class="info-label">Account ID:</span>
+            <span class="info-value">{{ rewardPoints.accountId }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last Earned:</span>
+            <span class="info-value">{{ getLastEarnedDate() }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last Updated:</span>
+            <span class="info-value">{{ rewardPoints.updatedOn | date: 'short' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reward-info-box">
+        <p><strong>How to Earn Reward Points:</strong></p>
+        <ul>
+          <li>Earn <strong>1 point per ₹100</strong> transferred</li>
+          <li>Transfer must be <strong>greater than ₹100</strong></li>
+          <li>You must transfer to <strong>different account</strong></li>
+          <li>Transaction must be <strong>successful</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
