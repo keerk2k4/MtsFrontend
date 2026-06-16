@@ -1,113 +1,127 @@
-/* Center the login box beautifully */
-#login-box {
-  width: 350px;
-  margin: 80px auto;
-  background: #ffffff;
-  padding: 35px 35px 40px;
-  border-radius: 14px;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.15);
-  font-family: 'Segoe UI', sans-serif;
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 44px 38px 36px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.login-brand {
   text-align: center;
+  margin-bottom: 32px;
 }
 
-/* Title */
-#login-box h2 {
-  margin-bottom: 25px;
-  font-size: 26px;
-  font-weight: 700;
-  color: #2c7be5;
-}
-
-/* Error message styling */
-#login-box div[style] {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* Remove table look */
-#login-box table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-/* Hide header row */
-#login-box thead {
-  display: none;
-}
-
-/* Stack rows vertically */
-#login-box tr {
-  display: block;
-  margin-bottom: 20px;
-}
-
-/* ★★ Add LABELS above inputs even though HTML has no labels ★★ */
-#login-box input[name="username"]::before,
-#login-box input[name="password"]::before {
-  content: attr(placeholder);
-}
-
-#login-box td {
-  width: 100%;
-  display: block;
-  text-align: left;
-}
-
-/* Create visible labels */
-#login-box td::before {
-  display: block;
-  font-size: 15px;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 6px;
-}
-
-#login-box tr:nth-child(2) td::before {
-  content: "Password";
-}
-
-/* Input fields */
-#login-box input[type="text"],
-#login-box input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  font-size: 15px;
-  border: 1px solid #d0d7e2;
-  border-radius: 8px;
-  outline: none;
-  transition: 0.2s ease-in-out;
-}
-
-#login-box input[type="text"]:focus,
-#login-box input[type="password"]:focus {
-  border-color: #2c7be5;
-  box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.25);
-}
-
-/* Login button */
-#login-box input[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  background: #2c7be5;
+.brand-mark {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  font-size: 16px;
+  font-size: 34px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 24px rgba(102, 126, 234, 0.4);
+}
+
+.login-brand h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.subtitle {
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+}
+
+.error-banner {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field { margin-bottom: 16px; }
+
+.field label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 7px;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  background: #f7fafc;
+}
+
+.field input:focus {
+  border-color: #667eea;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 15.5px;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
-  transition: 0.25s ease-in-out;
+  border-radius: 10px;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-#login-box input[type="submit"]:hover {
-  background: #1b64c3;
+.login-btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(102, 126, 234, 0.45);
 }
 
-/* Responsive design */
+.footer-text {
+  text-align: center;
+  margin: 22px 0 0;
+  font-size: 12.5px;
+  color: #a0aec0;
+}
+
 @media (max-width: 480px) {
-  #login-box {
-    width: 90%;
-    padding: 25px;
-  }
+  .login-card { padding: 32px 26px; }
 }

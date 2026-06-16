@@ -1,17 +1,59 @@
-<div class="home-container">
-    <h1 class="main-heading">Money Transfer System</h1>
-    <h2>Welcome Back!</h2>
+<div class="dashboard-wrapper">
+  <header class="dashboard-header">
+    <div class="brand">
+      <div class="brand-logo">₹</div>
+      <div class="brand-text">
+        <h1>Money Transfer System</h1>
+        <p>Secure. Fast. Reliable.</p>
+      </div>
+    </div>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </header>
 
-    <div class="btn-grp">
-    <a *ngIf="accountId" [routerLink]="['/getdetails', accountId]" class="btn btn-warning">GET DETAILS</a>
-    <a *ngIf="accountId" [routerLink]="['/balance', accountId]" class="btn btn-primary">GET BALANCE</a>
-    <a *ngIf="accountId" [routerLink]="['/transfer', accountId]" class="btn btn-primary">TRANSFER MONEY</a>
-    <a *ngIf="accountId" [routerLink]="['/history', accountId]" class="btn btn-primary">TRANSACTION HISTORY</a>
-    <a *ngIf="accountId" [routerLink]="['/rewards', accountId]" class="btn btn-success">MY REWARDS</a>          <!-- ADD -->
-    <a *ngIf="accountId" [routerLink]="['/reward-history', accountId]" class="btn btn-info">REWARD HISTORY</a>  <!-- ADD -->
-</div>
+  <section class="welcome-card">
+    <p class="greeting">Welcome back</p>
+    <h2 class="user-name" *ngIf="accountId">Account #{{ accountId }}</h2>
+  </section>
 
-    <button mat-raised-button (click)="logout()">
-        Logout
-      </button>
+  <section class="action-grid" *ngIf="accountId">
+    <a [routerLink]="['/getdetails', accountId]" class="action-card card-purple">
+      <div class="card-icon">👤</div>
+      <h3>Account Details</h3>
+      <p>View your account information</p>
+    </a>
+
+    <a [routerLink]="['/balance', accountId]" class="action-card card-green">
+      <div class="card-icon">💰</div>
+      <h3>Get Balance</h3>
+      <p>Check your current balance</p>
+    </a>
+
+    <a [routerLink]="['/transfer', accountId]" class="action-card card-blue">
+      <div class="card-icon">💸</div>
+      <h3>Transfer Money</h3>
+      <p>Send money to another account</p>
+    </a>
+
+    <a [routerLink]="['/history', accountId]" class="action-card card-orange">
+      <div class="card-icon">📜</div>
+      <h3>Transaction History</h3>
+      <p>View past transactions</p>
+    </a>
+
+    <a [routerLink]="['/rewards', accountId]" class="action-card card-pink">
+      <div class="card-icon">⭐</div>
+      <h3>My Rewards</h3>
+      <p>See your reward points</p>
+    </a>
+
+    <a [routerLink]="['/reward-history', accountId]" class="action-card card-teal">
+      <div class="card-icon">🎁</div>
+      <h3>Reward History</h3>
+      <p>Track your reward activity</p>
+    </a>
+  </section>
+
+  <section class="no-account" *ngIf="!accountId">
+    <p>Could not load your account. Please log in again.</p>
+  </section>
 </div>
