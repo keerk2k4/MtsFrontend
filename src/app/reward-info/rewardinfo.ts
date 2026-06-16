@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';                         // ← ADD
 import { RewardService, RewardPointsResponse } from '../rewardservice';
 
 @Component({
@@ -16,13 +17,14 @@ export class RewardInfoComponent implements OnInit {
   loading: boolean = false;
   error: string | null = null;
 
-  constructor(private rewardService: RewardService) {}
+  constructor(private rewardService: RewardService, private route: ActivatedRoute) {}  // ← ADD route
 
   ngOnInit(): void {
-    if (this.accountId) {
-      this.loadRewardPoints();
-    }
-  }
+  this.route.paramMap.subscribe(params => {        // ← REPLACE entire block
+    this.accountId = Number(params.get('id'));
+    this.loadRewardPoints();
+  });
+}
 
   loadRewardPoints(): void {
     if (!this.accountId) {

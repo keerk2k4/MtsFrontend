@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { RewardService, RewardTransactionResponse } from '../rewardservice';
 
 @Component({
@@ -17,13 +18,14 @@ export class RewardHistoryComponent implements OnInit {
   error: string | null = null;
   displayCount: number = 5; // Show first 5 by default
 
-  constructor(private rewardService: RewardService) {}
+  constructor(private rewardService: RewardService, private route: ActivatedRoute) {}  // ← ADD route
 
   ngOnInit(): void {
-    if (this.accountId) {
-      this.loadRewardHistory();
-    }
-  }
+  this.route.paramMap.subscribe(params => {         // ← REPLACE entire block
+    this.accountId = Number(params.get('id'));
+    this.loadRewardHistory();
+  });
+}
 
   loadRewardHistory(): void {
     if (!this.accountId) {

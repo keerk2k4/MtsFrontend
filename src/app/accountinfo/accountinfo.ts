@@ -16,11 +16,11 @@ export class Accountinfo {
   constructor(private router: Router, private authService: Auth) {}
 
   ngOnInit(): void {
-  const storedUser = sessionStorage.getItem('auth_user');
-  console.log(storedUser);
-  if (storedUser) {
-    this.accountId = Number(storedUser);
+  const storedId = sessionStorage.getItem('auth_account_id');  // ← CHANGE KEY
+  if (storedId) {
+    this.accountId = Number(storedId);
   }
+}
 
 }
 logout(): void {

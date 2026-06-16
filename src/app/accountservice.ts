@@ -14,7 +14,7 @@ import { Transferresponse } from './transferresponse';
 })
 
 export class Accountservice {
-  URI = 'http://localhost:8080/api/v1/accounts';
+  URI = 'http://localhost:8080/api/v1/account';
 
   constructor(private http: HttpClient) {}
 

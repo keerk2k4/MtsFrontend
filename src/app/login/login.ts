@@ -12,6 +12,7 @@ import { Auth } from '../auth';
 export class Login {
   username: string = '';
   password: string = '';
+  accountId: string = '';   
   isLoggedin = false;
   error: string = '';
   data: any = {};
@@ -19,11 +20,12 @@ export class Login {
   constructor(private router: Router, private authService: Auth) { }
 
   doLogin() {
-  if (this.username !== '' && this.password !== '') {
+  if (this.username !== '' && this.password !== '' && this.accountId !== '') {
     this.authService.authenticate(this.username, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/home']);
-      },
+  sessionStorage.setItem('auth_account_id', this.accountId);  // ← ADD THIS LINE
+  this.router.navigate(['/home']);
+},
       error: (error) => {
         console.error("Login failed: ", error);
         this.error = 'Invalid credentials or error during login';
