@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Auth } from '../auth';
 import { Router } from '@angular/router';
 @Component({
@@ -9,21 +10,25 @@ import { Router } from '@angular/router';
 })
 export class Accountinfo {
 
-  accountId: number | null = null; 
+  accountId: number | null = null;
+  private isBrowser = false;
 
-
-  
-  constructor(private router: Router, private authService: Auth) {}
+  constructor(
+    private router: Router,
+    private authService: Auth,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
-  const storedId = sessionStorage.getItem('auth_account_id');  // ← CHANGE KEY
-  if (storedId) {
-    this.accountId = Number(storedId);
+    if (this.isBrowser) {
+      const storedId = sessionStorage.getItem('auth_account_id');
+      if (storedId) this.accountId = Number(storedId);
+    }
   }
-}
 
-}
-logout(): void {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['']);
   }

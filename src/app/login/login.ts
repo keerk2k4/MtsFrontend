@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../auth';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -17,14 +19,20 @@ export class Login {
   error: string = '';
   data: any = {};
 
-  constructor(private router: Router, private authService: Auth) { }
+  private isBrowser = false;
+
+  constructor(private router: Router, private authService: Auth, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   doLogin() {
   if (this.username !== '' && this.password !== '' && this.accountId !== '') {
     this.authService.authenticate(this.username, this.password).subscribe({
       next: () => {
-  sessionStorage.setItem('auth_account_id', this.accountId);  // ← ADD THIS LINE
-  this.router.navigate(['/home']);
+        if (this.isBrowser) {
+          sessionStorage.setItem('auth_account_id', this.accountId);
+        }
+        this.router.navigate(['/home']);
 },
       error: (error) => {
         console.error("Login failed: ", error);
