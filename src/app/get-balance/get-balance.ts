@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class GetBalance implements OnInit {
   balance: number = 0;
   errorMsg: string = '';
+  accountId: number = 0;
 
   constructor(
     private service: Accountservice,
@@ -21,8 +22,8 @@ export class GetBalance implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((param) => {
-      const id = Number(param.get('id'));
-      this.getUserBalance(id);
+      this.accountId = Number(param.get('id'));
+      this.getUserBalance(this.accountId);
     });
   }
 

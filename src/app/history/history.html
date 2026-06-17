@@ -1,52 +1,47 @@
 <div class="page-wrapper">
-  <div class="history-card">
+  <div class="card">
     <div class="card-header">
-      <div class="header-icon">📜</div>
       <h1>Transaction History</h1>
       <p>Account #{{ currentAccountId }}</p>
     </div>
 
     <div class="filter-row">
-      <button class="filter-btn" [class.active]="activeFilter === 'all'"
-              (click)="filterTransactions('all')">All</button>
-      <button class="filter-btn sent" [class.active]="activeFilter === 'sent'"
-              (click)="filterTransactions('sent')">Sent</button>
-      <button class="filter-btn received" [class.active]="activeFilter === 'received'"
-              (click)="filterTransactions('received')">Received</button>
+      <button class="filter-btn" [class.active]="activeFilter==='all'"      (click)="filterTransactions('all')">All</button>
+      <button class="filter-btn" [class.active]="activeFilter==='sent'"     (click)="filterTransactions('sent')">Sent</button>
+      <button class="filter-btn" [class.active]="activeFilter==='received'" (click)="filterTransactions('received')">Received</button>
     </div>
 
-    <div class="error-box" *ngIf="errorMsg">
-      <span>⚠️</span> {{ errorMsg }}
-    </div>
+    <div class="error-box" *ngIf="errorMsg">{{ errorMsg }}</div>
 
     <div class="empty-state" *ngIf="!errorMsg && filteredTransactions.length === 0">
-      <p>No transactions found.</p>
+      No transactions found.
     </div>
 
-    <div class="transaction-list" *ngIf="filteredTransactions.length > 0">
+    <div class="tx-list" *ngIf="filteredTransactions.length > 0">
       <div class="tx-row" *ngFor="let tx of filteredTransactions">
         <div class="tx-left">
-          <div class="tx-icon" [class.sent]="tx.fromAccountId === currentAccountId"
-                               [class.received]="tx.toAccountId === currentAccountId">
-            {{ tx.fromAccountId === currentAccountId ? '↑' : '↓' }}
+          <div class="tx-dir" [class.sent]="tx.fromAccountId===currentAccountId"
+                               [class.recv]="tx.toAccountId===currentAccountId">
+            {{ tx.fromAccountId === currentAccountId ? 'SENT' : 'RECV' }}
           </div>
           <div class="tx-info">
-            <p class="tx-type">{{ tx.fromAccountId === currentAccountId ? 'Sent to' : 'Received from' }}
-              <strong>Account #{{ getOtherAccountId(tx) }}</strong>
+            <p class="tx-peer">
+              {{ tx.fromAccountId === currentAccountId ? 'To' : 'From' }}
+              Account #{{ getOtherAccountId(tx) }}
             </p>
             <p class="tx-date">{{ formatDate(tx.createdOn) }}</p>
-            <p class="tx-status" [class.success]="tx.status === 'SUCCESS'" [class.failed]="tx.status === 'FAILED'">
+            <p class="tx-status" [class.success]="tx.status==='SUCCESS'" [class.failed]="tx.status==='FAILED'">
               {{ tx.status }}
             </p>
           </div>
         </div>
-        <div class="tx-amount" [class.debit]="tx.fromAccountId === currentAccountId"
-                                [class.credit]="tx.toAccountId === currentAccountId">
+        <span class="tx-amount" [class.debit]="tx.fromAccountId===currentAccountId"
+                                 [class.credit]="tx.toAccountId===currentAccountId">
           {{ tx.fromAccountId === currentAccountId ? '-' : '+' }}₹{{ tx.amount | number:'1.2-2' }}
-        </div>
+        </span>
       </div>
     </div>
 
-    <button class="back-btn" (click)="goBack()">← Back to Dashboard</button>
+    <button class="back-btn" (click)="goBack()">Back to Dashboard</button>
   </div>
 </div>

@@ -1,12 +1,14 @@
 <div class="page-wrapper">
-  <div class="detail-card">
+  <div class="card">
     <div class="card-header">
-      <div class="header-icon">👤</div>
       <h1>Account Details</h1>
+      <p>Your account information</p>
     </div>
 
-    <div class="error-box" *ngIf="errorMsg">
-      <span>⚠️</span> {{ errorMsg }}
+    <div class="error-box" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <div class="loading-text" *ngIf="!errorMsg && accountresp.id === 0">
+      Loading account details...
     </div>
 
     <div class="fields" *ngIf="!errorMsg && accountresp.id !== 0">
@@ -20,11 +22,12 @@
       </div>
       <div class="field-row">
         <span class="label">Balance</span>
-        <span class="value balance">₹ {{ accountresp.balance | number:'1.2-2' }}</span>
+        <span class="value green">₹ {{ accountresp.balance | number:'1.2-2' }}</span>
       </div>
       <div class="field-row">
         <span class="label">Status</span>
-        <span class="value status-badge" [ngClass]="accountresp.status === 'ACTIVE' ? 'active' : 'inactive'">
+        <span class="status-badge"
+              [ngClass]="accountresp.status === 'ACTIVE' ? 'active' : 'inactive'">
           {{ accountresp.status }}
         </span>
       </div>
@@ -38,10 +41,6 @@
       </div>
     </div>
 
-    <div class="loading" *ngIf="!errorMsg && accountresp.id === 0">
-      Loading account details...
-    </div>
-
-    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+    <button class="back-btn" (click)="navigate()">Back to Dashboard</button>
   </div>
 </div>

@@ -1,59 +1,60 @@
 <div class="dashboard-wrapper">
-  <header class="dashboard-header">
-    <div class="brand">
-      <div class="brand-logo">₹</div>
-      <div class="brand-text">
-        <h1>Money Transfer System</h1>
-        <p>Secure. Fast. Reliable.</p>
+
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <span class="logo-text">MTS</span>
+      <div>
+        <p class="app-name">Money Transfer System</p>
+        <p class="app-sub">Secure. Fast. Reliable.</p>
       </div>
     </div>
     <button class="logout-btn" (click)="logout()">Logout</button>
   </header>
 
-  <section class="welcome-card">
-    <p class="greeting">Welcome back</p>
-    <h2 class="user-name" *ngIf="accountId">Account #{{ accountId }}</h2>
-  </section>
+  <div class="welcome-row">
+    <div>
+      <p class="welcome-label">Welcome back</p>
+      <h2 class="welcome-name">{{ username || 'User' }}</h2>
+    </div>
+    <div class="account-badge" *ngIf="accountId">
+      Account ID: <strong>{{ accountId }}</strong>
+    </div>
+  </div>
 
-  <section class="action-grid" *ngIf="accountId">
-    <a [routerLink]="['/getdetails', accountId]" class="action-card card-purple">
-      <div class="card-icon">👤</div>
-      <h3>Account Details</h3>
-      <p>View your account information</p>
+  <div class="grid" *ngIf="accountId">
+    <a [routerLink]="['/getdetails', accountId]" class="tile">
+      <p class="tile-title">Account Details</p>
+      <p class="tile-sub">View your account information</p>
     </a>
 
-    <a [routerLink]="['/balance', accountId]" class="action-card card-green">
-      <div class="card-icon">💰</div>
-      <h3>Get Balance</h3>
-      <p>Check your current balance</p>
+    <a [routerLink]="['/balance', accountId]" class="tile">
+      <p class="tile-title">Get Balance</p>
+      <p class="tile-sub">Check your current balance</p>
     </a>
 
-    <a [routerLink]="['/transfer', accountId]" class="action-card card-blue">
-      <div class="card-icon">💸</div>
-      <h3>Transfer Money</h3>
-      <p>Send money to another account</p>
+    <a [routerLink]="['/transfer', accountId]" class="tile tile-accent">
+      <p class="tile-title">Transfer Money</p>
+      <p class="tile-sub">Send money to another account</p>
     </a>
 
-    <a [routerLink]="['/history', accountId]" class="action-card card-orange">
-      <div class="card-icon">📜</div>
-      <h3>Transaction History</h3>
-      <p>View past transactions</p>
+    <a [routerLink]="['/history', accountId]" class="tile">
+      <p class="tile-title">Transaction History</p>
+      <p class="tile-sub">View past transactions</p>
     </a>
 
-    <a [routerLink]="['/rewards', accountId]" class="action-card card-pink">
-      <div class="card-icon">⭐</div>
-      <h3>My Rewards</h3>
-      <p>See your reward points</p>
+    <a [routerLink]="['/rewards', accountId]" class="tile">
+      <p class="tile-title">My Rewards</p>
+      <p class="tile-sub">See your reward points</p>
     </a>
 
-    <a [routerLink]="['/reward-history', accountId]" class="action-card card-teal">
-      <div class="card-icon">🎁</div>
-      <h3>Reward History</h3>
-      <p>Track your reward activity</p>
+    <a [routerLink]="['/reward-history', accountId]" class="tile">
+      <p class="tile-title">Reward History</p>
+      <p class="tile-sub">Track your reward activity</p>
     </a>
-  </section>
+  </div>
 
-  <section class="no-account" *ngIf="!accountId">
-    <p>Could not load your account. Please log in again.</p>
-  </section>
+  <div class="no-account" *ngIf="!accountId">
+    Could not load your account. Please log in again.
+  </div>
+
 </div>

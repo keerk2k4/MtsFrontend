@@ -1,31 +1,29 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Auth } from '../auth';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-accountinfo',
   standalone: false,
   templateUrl: './accountinfo.html',
   styleUrl: './accountinfo.css',
 })
-export class Accountinfo {
+export class Accountinfo implements OnInit {
 
-  accountId: number | null = null;
-  private isBrowser = false;
+  accountId: string | null = null;
+  username: string = '';
 
   constructor(
     private router: Router,
     private authService: Auth,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (this.isBrowser) {
-      const storedId = sessionStorage.getItem('auth_account_id');
-      console.log('accountinfo ngOnInit isBrowser=', this.isBrowser, 'storedId=', storedId);
-      if (storedId) this.accountId = Number(storedId);
+    if (isPlatformBrowser(this.platformId)) {
+      this.accountId = this.authService.getAccountId();
+      this.username  = this.authService.getLoggedinUser();
     }
   }
 

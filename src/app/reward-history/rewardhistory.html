@@ -1,7 +1,6 @@
 <div class="page-wrapper">
-  <div class="history-card">
+  <div class="card">
     <div class="card-header">
-      <div class="header-icon">🎁</div>
       <h1>Reward History</h1>
       <p>Account #{{ accountId }}</p>
     </div>
@@ -11,40 +10,36 @@
       <p>Loading reward history...</p>
     </div>
 
-    <div class="error-box" *ngIf="error && !loading">
-      <span>⚠️</span> {{ error }}
-    </div>
+    <div class="error-box" *ngIf="error && !loading">{{ error }}</div>
 
     <div class="empty-state" *ngIf="!loading && !error && rewardTransactions.length === 0">
-      <p>🎯 No reward transactions yet.</p>
-      <p>Make a transfer of more than ₹100 to earn points!</p>
+      <p>No reward transactions yet.</p>
+      <p>Transfer more than ₹100 to earn points.</p>
     </div>
 
     <div *ngIf="!loading && !error && rewardTransactions.length > 0">
       <div class="summary-bar">
         <div class="summary-item">
-          <span class="s-label">Total Transactions</span>
+          <span class="s-label">Transactions</span>
           <span class="s-value">{{ rewardTransactions.length }}</span>
         </div>
         <div class="summary-item">
           <span class="s-label">Total Points</span>
-          <span class="s-value highlight">{{ getTotalPoints() }} pts</span>
+          <span class="s-value green">{{ getTotalPoints() }} pts</span>
         </div>
       </div>
 
       <div class="tx-list">
         <div class="tx-item" *ngFor="let tx of getVisibleTransactions()">
           <div class="tx-top">
-            <span class="tx-to">→ Account #{{ tx.toAccountId }}</span>
+            <span class="tx-to">To Account #{{ tx.toAccountId }}</span>
             <span class="tx-date">{{ formatDate(tx.createdOn) }}</span>
           </div>
           <div class="tx-bottom">
             <span class="tx-amount">₹{{ tx.transferAmount | number:'1.2-2' }}</span>
             <span class="tx-points">+{{ tx.pointsEarned }} pts</span>
           </div>
-          <div class="tx-calc">
-            ₹{{ tx.transferAmount | number:'1.2-2' }} ÷ ₹100 = {{ tx.pointsEarned }} points
-          </div>
+          <p class="tx-calc">₹{{ tx.transferAmount | number:'1.2-2' }} ÷ ₹100 = {{ tx.pointsEarned }} points</p>
         </div>
       </div>
 
@@ -52,12 +47,12 @@
         <button class="page-btn" *ngIf="hasMore()" (click)="showMore()">
           Load More ({{ rewardTransactions.length - displayCount }} remaining)
         </button>
-        <button class="page-btn secondary" *ngIf="displayCount > 5" (click)="showLess()">
+        <button class="page-btn outline" *ngIf="displayCount > 5" (click)="showLess()">
           Show Less
         </button>
       </div>
     </div>
 
-    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+    <button class="back-btn" (click)="navigate()">Back to Dashboard</button>
   </div>
 </div>

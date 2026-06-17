@@ -1,70 +1,42 @@
 <div class="page-wrapper">
-  <div class="transfer-card">
+  <div class="card">
     <div class="card-header">
-      <div class="header-icon">💸</div>
       <h1>Transfer Money</h1>
-      <p>Securely send funds to another account</p>
+      <p>Send funds to another account</p>
     </div>
 
     <form #f="ngForm" novalidate>
       <div class="field">
         <label>From Account ID</label>
-        <input type="text" name="fromId" [(ngModel)]="transferreq.fromId" class="input readonly" readonly />
+        <input type="text" name="fromId" [(ngModel)]="transferreq.fromId" class="readonly" readonly />
       </div>
 
       <div class="field">
         <label>To Account ID</label>
-        <input
-          type="number"
-          name="toId"
-          [(ngModel)]="transferreq.toId"
-          class="input"
-          placeholder="Enter recipient account ID"
-          required
-          #toIdModel="ngModel"
-          min="1"
-        />
-        <div class="field-error" *ngIf="toIdModel.invalid && toIdModel.touched">
-          Please enter a valid recipient account ID.
-        </div>
+        <input type="number" name="toId" [(ngModel)]="transferreq.toId"
+               placeholder="Enter recipient account ID" required min="1" />
       </div>
 
       <div class="field">
         <label>Amount (₹)</label>
-        <input
-          type="number"
-          name="amount"
-          [(ngModel)]="transferreq.amount"
-          class="input"
-          placeholder="Enter amount (e.g. 500)"
-          required
-          min="1"
-          #amountModel="ngModel"
-        />
-        <div class="field-hint">Maximum allowed: ₹{{ MAX_AMOUNT | number }}</div>
-        <div class="field-error" *ngIf="amountModel.invalid && amountModel.touched">
-          Please enter a valid amount.
-        </div>
+        <input type="number" name="amount" [(ngModel)]="transferreq.amount"
+               placeholder="Enter amount" required min="1" />
+        <span class="hint">Maximum: ₹{{ MAX_AMOUNT | number }}</span>
       </div>
 
-      <div class="same-account-error"
+      <div class="same-acct-warn"
            *ngIf="transferreq.fromId && transferreq.toId && (+transferreq.fromId === +transferreq.toId)">
-        ⚠️ Source and destination accounts must be different.
+        Source and destination accounts must be different.
       </div>
 
-      <button type="button" class="transfer-btn" (click)="transferMoney()">
-        Transfer Money
+      <button type="button" class="submit-btn" (click)="transferMoney()">
+        Transfer
       </button>
 
-      <div class="status-box success" *ngIf="isSuccess === true">
-        {{ statusMessage }}
-      </div>
+      <div class="status-box success" *ngIf="isSuccess === true">{{ statusMessage }}</div>
+      <div class="status-box error"   *ngIf="isSuccess === false">{{ statusMessage }}</div>
 
-      <div class="status-box error" *ngIf="isSuccess === false">
-        ⚠️ {{ statusMessage }}
-      </div>
-
-      <button type="button" class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+      <button type="button" class="back-btn" (click)="navigate()">Back to Dashboard</button>
     </form>
   </div>
 </div>

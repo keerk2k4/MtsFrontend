@@ -1,7 +1,6 @@
 <div class="page-wrapper">
-  <div class="reward-card">
+  <div class="card">
     <div class="card-header">
-      <div class="header-icon">⭐</div>
       <h1>My Rewards</h1>
       <p>Account #{{ accountId }}</p>
     </div>
@@ -11,15 +10,13 @@
       <p>Loading reward points...</p>
     </div>
 
-    <div class="error-box" *ngIf="error && !loading">
-      <span>⚠️</span> {{ error }}
-    </div>
+    <div class="error-box" *ngIf="error && !loading">{{ error }}</div>
 
-    <div class="reward-body" *ngIf="!loading && !error && rewardPoints">
-      <div class="points-display">
+    <div *ngIf="!loading && !error && rewardPoints">
+      <div class="points-box">
         <p class="points-label">Total Points Earned</p>
-        <p class="points-number">{{ rewardPoints.totalPoints }}</p>
-        <p class="points-sub">pts</p>
+        <p class="points-value">{{ rewardPoints.totalPoints }}</p>
+        <p class="points-unit">points</p>
       </div>
 
       <div class="info-rows">
@@ -38,16 +35,16 @@
       </div>
 
       <div class="how-to-earn">
-        <p class="earn-title">💡 How to Earn Points</p>
+        <p class="earn-title">How to Earn Points</p>
         <ul>
-          <li>Earn <strong>1 point</strong> per ₹100 transferred</li>
-          <li>Transfer must be <strong>greater than ₹100</strong></li>
-          <li>Must transfer to a <strong>different account</strong></li>
-          <li>Transaction must be <strong>successful</strong></li>
+          <li>Earn 1 point per ₹100 transferred</li>
+          <li>Transfer must be greater than ₹100</li>
+          <li>Must transfer to a different account</li>
+          <li>Transaction must be successful</li>
         </ul>
       </div>
     </div>
 
-    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+    <button class="back-btn" (click)="navigate()">Back to Dashboard</button>
   </div>
 </div>
