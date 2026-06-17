@@ -1,36 +1,35 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';                         // ← ADD
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RewardService, RewardPointsResponse } from '../rewardservice';
 
 @Component({
   selector: 'app-reward-info',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,          // ← FIXED: was true, must match AppModule
   templateUrl: './rewardinfo.html',
   styleUrls: ['./rewardinfo.css']
 })
 export class RewardInfoComponent implements OnInit {
-  @Input() accountId: number | null = null;
-  
+
+  accountId: number = 0;
   rewardPoints: RewardPointsResponse | null = null;
-  loading: boolean = false;
+  loading: boolean = true;
   error: string | null = null;
 
-  constructor(private rewardService: RewardService, private route: ActivatedRoute) {}  // ← ADD route
+  constructor(
+    private rewardService: RewardService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-  this.route.paramMap.subscribe(params => {        // ← REPLACE entire block
-    this.accountId = Number(params.get('id'));
-    this.loadRewardPoints();
-  });
-}
+    this.route.paramMap.subscribe(params => {
+      this.accountId = Number(params.get('id'));
+      this.loadRewardPoints();
+    });
+  }
 
   loadRewardPoints(): void {
-    if (!this.accountId) {
-      return;
-    }
-
     this.loading = true;
     this.error = null;
 
@@ -38,23 +37,22 @@ export class RewardInfoComponent implements OnInit {
       next: (data) => {
         this.rewardPoints = data;
         this.loading = false;
+        this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading reward points:', err);
-        this.error = 'Failed to load reward points';
+        this.error = err?.error?.message || 'Failed to load reward points. Please try again.';
         this.loading = false;
+        this.cd.detectChanges();
       }
     });
   }
 
   getLastEarnedDate(): string {
-    if (!this.rewardPoints?.lastEarnedOn) {
-      return 'N/A';
-    }
-    return new Date(this.rewardPoints.lastEarnedOn).toLocaleDateString();
+    if (!this.rewardPoints?.lastEarnedOn) return 'No transfers yet';
+    return new Date(this.rewardPoints.lastEarnedOn).toLocaleString('en-IN');
   }
 
-  refresh(): void {
-    this.loadRewardPoints();
+  navigate(): void {
+    this.router.navigate(['/home']);
   }
 }

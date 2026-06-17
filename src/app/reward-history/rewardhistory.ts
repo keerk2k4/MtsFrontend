@@ -1,37 +1,36 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RewardService, RewardTransactionResponse } from '../rewardservice';
 
 @Component({
   selector: 'app-reward-history',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,          // ← FIXED: was true, must match AppModule
   templateUrl: './rewardhistory.html',
   styleUrls: ['./rewardhistory.css']
 })
 export class RewardHistoryComponent implements OnInit {
-  @Input() accountId: number | null = null;
-  
-  rewardTransactions: RewardTransactionResponse[] = [];
-  loading: boolean = false;
-  error: string | null = null;
-  displayCount: number = 5; // Show first 5 by default
 
-  constructor(private rewardService: RewardService, private route: ActivatedRoute) {}  // ← ADD route
+  accountId: number = 0;
+  rewardTransactions: RewardTransactionResponse[] = [];
+  loading: boolean = true;
+  error: string | null = null;
+  displayCount: number = 5;
+
+  constructor(
+    private rewardService: RewardService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-  this.route.paramMap.subscribe(params => {         // ← REPLACE entire block
-    this.accountId = Number(params.get('id'));
-    this.loadRewardHistory();
-  });
-}
+    this.route.paramMap.subscribe(params => {
+      this.accountId = Number(params.get('id'));
+      this.loadRewardHistory();
+    });
+  }
 
   loadRewardHistory(): void {
-    if (!this.accountId) {
-      return;
-    }
-
     this.loading = true;
     this.error = null;
 
@@ -39,11 +38,12 @@ export class RewardHistoryComponent implements OnInit {
       next: (data) => {
         this.rewardTransactions = data || [];
         this.loading = false;
+        this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading reward history:', err);
-        this.error = 'Failed to load reward history';
+        this.error = err?.error?.message || 'Failed to load reward history. Please try again.';
         this.loading = false;
+        this.cd.detectChanges();
       }
     });
   }
@@ -52,29 +52,22 @@ export class RewardHistoryComponent implements OnInit {
     return this.rewardTransactions.slice(0, this.displayCount);
   }
 
-  getTotalVisiblePoints(): number {
-    return this.getVisibleTransactions()
-      .reduce((sum, t) => sum + t.pointsEarned, 0);
+  getTotalPoints(): number {
+    return this.rewardTransactions.reduce((sum, t) => sum + t.pointsEarned, 0);
   }
 
-  showMore(): void {
-    this.displayCount += 5;
+  showMore(): void { this.displayCount += 5; }
+  showLess(): void { this.displayCount = 5; }
+  hasMore(): boolean { return this.rewardTransactions.length > this.displayCount; }
+
+  formatDate(d: string): string {
+    return new Date(d).toLocaleString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
   }
 
-  showLess(): void {
-    this.displayCount = 5;
-  }
-
-  hasMore(): boolean {
-    return this.rewardTransactions.length > this.displayCount;
-  }
-
-  refresh(): void {
-    this.loadRewardHistory();
-  }
-
-  getEarningPercentage(transaction: RewardTransactionResponse): number {
-    // Calculate how many ₹100 units are in the transfer amount
-    return transaction.pointsEarned * 100;
+  navigate(): void {
+    this.router.navigate(['/home']);
   }
 }

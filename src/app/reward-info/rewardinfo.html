@@ -1,53 +1,53 @@
-<div class="reward-info-container">
-  <div class="reward-info-card">
-    <div class="reward-header">
-      <h2>Your Reward Points</h2>
-      <button class="refresh-btn" (click)="refresh()" [disabled]="loading" title="Refresh">
-        <span *ngIf="!loading">🔄</span>
-        <span *ngIf="loading">⏳</span>
-      </button>
+<div class="page-wrapper">
+  <div class="reward-card">
+    <div class="card-header">
+      <div class="header-icon">⭐</div>
+      <h1>My Rewards</h1>
+      <p>Account #{{ accountId }}</p>
     </div>
 
-    <div *ngIf="loading" class="loading-message">
-      Loading reward points...
+    <div class="loading-box" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading reward points...</p>
     </div>
 
-    <div *ngIf="error && !loading" class="error-message">
-      {{ error }}
+    <div class="error-box" *ngIf="error && !loading">
+      <span>⚠️</span> {{ error }}
     </div>
 
-    <div *ngIf="rewardPoints && !loading" class="reward-details">
-      <div class="points-section">
-        <div class="points-display">
-          <div class="points-number">{{ rewardPoints.totalPoints }}</div>
-          <div class="points-label">Total Points Earned</div>
+    <div class="reward-body" *ngIf="!loading && !error && rewardPoints">
+      <div class="points-display">
+        <p class="points-label">Total Points Earned</p>
+        <p class="points-number">{{ rewardPoints.totalPoints }}</p>
+        <p class="points-sub">pts</p>
+      </div>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="label">Account ID</span>
+          <span class="value">#{{ rewardPoints.accountId }}</span>
         </div>
-
-        <div class="reward-info-items">
-          <div class="info-item">
-            <span class="info-label">Account ID:</span>
-            <span class="info-value">{{ rewardPoints.accountId }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Last Earned:</span>
-            <span class="info-value">{{ getLastEarnedDate() }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Last Updated:</span>
-            <span class="info-value">{{ rewardPoints.updatedOn | date: 'short' }}</span>
-          </div>
+        <div class="info-row">
+          <span class="label">Last Earned</span>
+          <span class="value">{{ getLastEarnedDate() }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Last Updated</span>
+          <span class="value">{{ rewardPoints.updatedOn | date:'medium' }}</span>
         </div>
       </div>
 
-      <div class="reward-info-box">
-        <p><strong>How to Earn Reward Points:</strong></p>
+      <div class="how-to-earn">
+        <p class="earn-title">💡 How to Earn Points</p>
         <ul>
-          <li>Earn <strong>1 point per ₹100</strong> transferred</li>
+          <li>Earn <strong>1 point</strong> per ₹100 transferred</li>
           <li>Transfer must be <strong>greater than ₹100</strong></li>
-          <li>You must transfer to <strong>different account</strong></li>
+          <li>Must transfer to a <strong>different account</strong></li>
           <li>Transaction must be <strong>successful</strong></li>
         </ul>
       </div>
     </div>
+
+    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
   </div>
 </div>
