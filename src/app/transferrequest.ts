@@ -1,5 +1,6 @@
 export interface Transferrequest {
-    fromId : number,
-	toId : number,
-	amount : number
+    fromId: number;
+    toId: number;
+    amount: number;
+    idempotencyKey?: string;
 }

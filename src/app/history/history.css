@@ -1,141 +1,148 @@
-/* Main container spacing */
-.container {
-  font-family: 'Segoe UI', sans-serif;
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 32px 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Card styling */
-.card {
-  border-radius: 12px;
-  overflow: hidden;
+.page-wrapper { max-width: 680px; margin: 0 auto; }
+
+.history-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
 
-/* Header */
-.card-header {
-  background: #3b7ddd !important;
-  padding: 18px;
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: white;
+.card-header { text-align: center; margin-bottom: 24px; }
+
+.header-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 14px;
 }
 
-.card-header h3 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: white;
+.card-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 700; color: #1a202c; }
+.card-header p  { margin: 0; font-size: 14px; color: #718096; }
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-/* Table styling */
-table {
-  margin-top: 15px;
-  background-color: white;
-  border-radius: 10px !important;
-  overflow: hidden;
-}
-
-/* Table Head */
-table thead {
-  background-color: #e8f0ff;
-}
-
-table thead th {
+.filter-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background: #f7fafc;
+  color: #4a5568;
   font-weight: 600;
-  color: #2c7be5;
-  text-transform: uppercase;
-  font-size: 14px;
-  padding: 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* Table Body */
-table tbody tr {
-  transition: 0.15s ease-in-out;
+.filter-btn.active      { background: #667eea; color: #fff; border-color: #667eea; }
+.filter-btn.sent.active { background: #e53e3e; border-color: #e53e3e; }
+.filter-btn.received.active { background: #10b981; border-color: #10b981; }
+
+.error-box {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-table tbody tr:hover {
-  background-color: #f5f9ff;
-}
-
-table td {
-  padding: 14px;
-  font-size: 15px;
-  color: #333;
-}
-
-/* Debit/Credit Amount Colors */
-.debit {
-  color: #d9534f;      /* Red for sent */
-  font-weight: 600;
-}
-
-.credit {
-  color: #28a745;      /* Green for received */
-  font-weight: 600;
-}
-
-/* Back Button */
-.btn-outline-secondary {
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 8px;
-  background-color: #3b7ddd;
-  transition: 0.25s ease-in-out;
-  text-decoration: none;
-  color: white !important;
+.empty-state {
   text-align: center;
+  padding: 40px;
+  color: #718096;
+  font-size: 15px;
 }
 
-.btn-outline-secondary:hover {
-  color: white;
-  background-color: #3b7ddd;
-  transform: translateY(-2px);
+.transaction-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+.tx-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: background 0.15s;
 }
 
-/* Card body spacing */
-.card-body {
-  padding: 25px;
+.tx-row:hover { background: #edf2f7; }
+
+.tx-left { display: flex; align-items: center; gap: 14px; }
+
+.tx-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-button.btn-outline-primary {
-  margin-right: 10px;
+.tx-icon.sent     { background: #fee2e2; color: #e53e3e; }
+.tx-icon.received { background: #d1fae5; color: #10b981; }
+
+.tx-info { display: flex; flex-direction: column; gap: 2px; }
+.tx-type  { margin: 0; font-size: 14px; color: #2d3748; }
+.tx-date  { margin: 0; font-size: 12px; color: #718096; }
+
+.tx-status {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-button.btn-outline-success {
-  margin-left: 10px;
+.tx-status.success { color: #10b981; }
+.tx-status.failed  { color: #e53e3e; }
+
+.tx-amount {
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
+.tx-amount.debit  { color: #e53e3e; }
+.tx-amount.credit { color: #10b981; }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  table thead {
-    display: none; /* Optional: hide header on mobile for cleaner view */
-  }
+.back-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #667eea;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-  table tbody td {
-    display: block;
-    text-align: left;
-    padding: 12px 10px;
-    border-bottom: 1px solid #eee;
-  }
+.back-btn:hover { background: #667eea; color: #fff; }
 
-  table tbody tr {
-    margin-bottom: 15px;
-    background: #f9fbff;
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  table tbody td::before {
-    font-weight: 600;
-    color: #2c7be5;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  table tbody td:nth-child(1)::before { content: "Date"; }
-  table tbody td:nth-child(2)::before { content: "Type"; }
-  table tbody td:nth-child(3)::before { content: "Account"; }
-  table tbody td:nth-child(4)::before { content: "Amount"; }
-  table tbody td:nth-child(5)::before { content: "Status"; }
+@media (max-width: 520px) {
+  .history-card { padding: 24px 18px; }
+  .tx-amount { font-size: 14px; }
 }

@@ -1,27 +1,47 @@
-<div class="get-details-container">
-<h1 class="title">Account Details</h1>
-<div>
-    <table class="custom-table" *ngIf="accountresp">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>BALANCE</th>
-                <th>STATUS</th>
-                <th>VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngIf="accountresp">
-                <td>{{ accountresp.id }}</td>
-                <td>{{ accountresp.holderName }}</td>
-                <td>{{ accountresp.status }}</td>
-                <td>{{ accountresp.version }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="page-wrapper">
+  <div class="detail-card">
+    <div class="card-header">
+      <div class="header-icon">👤</div>
+      <h1>Account Details</h1>
+    </div>
 
-    <!-- Back Button -->
-    <button *ngIf="showBackButton" (click)="navigate()">Back</button>
-</div>
+    <div class="error-box" *ngIf="errorMsg">
+      <span>⚠️</span> {{ errorMsg }}
+    </div>
+
+    <div class="fields" *ngIf="!errorMsg && accountresp.id !== 0">
+      <div class="field-row">
+        <span class="label">Account ID</span>
+        <span class="value">#{{ accountresp.id }}</span>
+      </div>
+      <div class="field-row">
+        <span class="label">Account Holder</span>
+        <span class="value">{{ accountresp.holderName }}</span>
+      </div>
+      <div class="field-row">
+        <span class="label">Balance</span>
+        <span class="value balance">₹ {{ accountresp.balance | number:'1.2-2' }}</span>
+      </div>
+      <div class="field-row">
+        <span class="label">Status</span>
+        <span class="value status-badge" [ngClass]="accountresp.status === 'ACTIVE' ? 'active' : 'inactive'">
+          {{ accountresp.status }}
+        </span>
+      </div>
+      <div class="field-row">
+        <span class="label">Version</span>
+        <span class="value">{{ accountresp.version }}</span>
+      </div>
+      <div class="field-row">
+        <span class="label">Last Updated</span>
+        <span class="value">{{ accountresp.lastUpdated | date:'medium' }}</span>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="!errorMsg && accountresp.id === 0">
+      Loading account details...
+    </div>
+
+    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+  </div>
 </div>

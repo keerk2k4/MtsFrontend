@@ -1,11 +1,19 @@
-<div class="get-balance-container">
-  <div class="balance">
-    <h1>Your Balance:</h1>
-    <p>₹{{ balance }}</p>
-  </div>
+<div class="page-wrapper">
+  <div class="balance-card">
+    <div class="card-header">
+      <div class="header-icon">💰</div>
+      <h1>Account Balance</h1>
+    </div>
 
-  
-  <div *ngIf="showBackButton" class="back-button">
-    <button (click)="navigate()">Back</button>
+    <div class="error-box" *ngIf="errorMsg">
+      <span>⚠️</span> {{ errorMsg }}
+    </div>
+
+    <div class="balance-display" *ngIf="!errorMsg">
+      <p class="balance-label">Available Balance</p>
+      <p class="balance-amount">₹ {{ balance | number:'1.2-2' }}</p>
+    </div>
+
+    <button class="back-btn" (click)="navigate()">← Back to Dashboard</button>
   </div>
 </div>

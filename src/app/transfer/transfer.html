@@ -1,95 +1,70 @@
-<div class="transfer-container">
-  <form #f="ngForm" novalidate>
-    <h1 align="center">Add Transaction Details</h1>
-
-    <!-- From Account Id -->
-    <label for="txtName" class="form-label">From Account Id</label>
-    <input
-      type="text"
-      id="txtName"
-      class="form-control"
-      name="fromId"
-      [(ngModel)]="transferreq.fromId"
-      required
-      pattern="^\d+$"
-      inputmode="numeric"
-      #fromIdModel="ngModel"
-    />
-    <div class="text-danger mt-1" *ngIf="fromIdModel.invalid && (fromIdModel.dirty || fromIdModel.touched)">
-      <div *ngIf="fromIdModel.errors?.['required']">From account id is required.</div>
-      <div *ngIf="fromIdModel.errors?.['pattern']">From account id must be a valid integer.</div>
+<div class="page-wrapper">
+  <div class="transfer-card">
+    <div class="card-header">
+      <div class="header-icon">💸</div>
+      <h1>Transfer Money</h1>
+      <p>Securely send funds to another account</p>
     </div>
 
-    <!-- To Account -->
-    <label for="txtJob" class="form-label">To Accout</label>
-    <input
-      type="text"
-      id="txtJob"
-      class="form-control"
-      name="toId"
-      [(ngModel)]="transferreq.toId"
-      required
-      pattern="^\d+$"
-      inputmode="numeric"
-      #toIdModel="ngModel"
-    />
-    <div class="text-danger mt-1" *ngIf="toIdModel.invalid && (toIdModel.dirty || toIdModel.touched)">
-      <div *ngIf="toIdModel.errors?.['required']">Recipient account id is required.</div>
-      <div *ngIf="toIdModel.errors?.['pattern']">Account id must be a valid integer.</div>
-    </div>
+    <form #f="ngForm" novalidate>
+      <div class="field">
+        <label>From Account ID</label>
+        <input type="text" name="fromId" [(ngModel)]="transferreq.fromId" class="input readonly" readonly />
+      </div>
 
-    <!-- Amount -->
-    <label for="txtSal" class="form-label">Amount</label>
-    <input
-      type="text"
-      id="txtSal"
-      class="form-control"
-      name="amount"
-      [(ngModel)]="transferreq.amount"
-      required
-      pattern="^\d+(\.\d{1,2})?$"
-      inputmode="decimal"
-      #amountModel="ngModel"
-    />
-    <div class="text-danger mt-1" *ngIf="amountModel.invalid && (amountModel.dirty || amountModel.touched)">
-      <div *ngIf="amountModel.errors?.['required']">Amount is required.</div>
-      <div *ngIf="amountModel.errors?.['pattern']">Use a positive number with up to 2 decimals (e.g., 1234.56).</div>
-    </div>
+      <div class="field">
+        <label>To Account ID</label>
+        <input
+          type="number"
+          name="toId"
+          [(ngModel)]="transferreq.toId"
+          class="input"
+          placeholder="Enter recipient account ID"
+          required
+          #toIdModel="ngModel"
+          min="1"
+        />
+        <div class="field-error" *ngIf="toIdModel.invalid && toIdModel.touched">
+          Please enter a valid recipient account ID.
+        </div>
+      </div>
 
-    <!-- Cross-field: same account -->
-    <div
-      class="text-danger mt-2"
-      *ngIf="
-        fromIdModel.valid &&
-        toIdModel.valid &&
-        (fromIdModel.touched || toIdModel.touched) &&
-        (+transferreq.fromId === +transferreq.toId)
-      "
-    >
-      You cannot transfer to the same account.
-    </div>
+      <div class="field">
+        <label>Amount (₹)</label>
+        <input
+          type="number"
+          name="amount"
+          [(ngModel)]="transferreq.amount"
+          class="input"
+          placeholder="Enter amount (e.g. 500)"
+          required
+          min="1"
+          #amountModel="ngModel"
+        />
+        <div class="field-hint">Maximum allowed: ₹{{ MAX_AMOUNT | number }}</div>
+        <div class="field-error" *ngIf="amountModel.invalid && amountModel.touched">
+          Please enter a valid amount.
+        </div>
+      </div>
 
-    <div class="form-text mb-2">Maximum allowed: {{ MAX_AMOUNT | number }}</div>
+      <div class="same-account-error"
+           *ngIf="transferreq.fromId && transferreq.toId && (+transferreq.fromId === +transferreq.toId)">
+        ⚠️ Source and destination accounts must be different.
+      </div>
 
-    <button type="button" (click)="transferMoney()" class="btn btn-primary">Transfer</button>
-    &nbsp;&nbsp;
+      <button type="button" class="transfer-btn" (click)="transferMoney()">
+        Transfer Money
+      </button>
 
-    <!-- Status box -->
-    <div class="mt-3" *ngIf="statusMessage">
-      <div
-        class="alert"
-        [ngClass]="{
-          'alert-success': isSuccess,
-          'alert-danger': !isSuccess
-        }"
-        role="alert"
-      >
+      <div class="status-box success" *ngIf="isSuccess === true">
         {{ statusMessage }}
       </div>
-    </div>
 
-    <div *ngIf="showBackButton" class="back-button">
-      <button type="button" (click)="navigate()">Back</button>
-    </div>
-  </form>
+      <div class="status-box error" *ngIf="isSuccess === false">
+        ⚠️ {{ statusMessage }}
+      </div>
+
+      <button type="button" class="back-btn" (click)="navigate()">← Back to Dashboard</button>
+    </form>
+  </div>
 </div>

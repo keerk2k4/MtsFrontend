@@ -1,56 +1,52 @@
-<div class="container py-5">
-<div class="row justify-content-center">
-<div class="col-md-8">
- 
-      <!-- Transaction History Card -->
-<div class="card shadow-lg border-0">
-<div class="card-header bg-primary text-white text-center">
-<h3 class="mb-0">Transaction History</h3>
-</div>
- 
-        <div class="card-body">
-<!-- Filter Buttons -->
-<div class="text-center mb-3">
-<button class="btn btn-outline-primary" (click)="filterTransactions('sent')">Sent</button>
-<br>
-<br>
-<button class="btn btn-outline-success" (click)="filterTransactions('received')">Received</button>
-</div>
- 
-          <!-- Transaction Table -->
-<table *ngIf="transactions.length" class="table table-bordered table-striped">
-<thead>
-<tr>
-<th>Date</th>
-<th>Type</th>
-<th>Account</th>
-<th>Amount</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr *ngFor="let transaction of filteredTransactions">
-<td>{{ formatDate(transaction.createdOn) }}</td>
-<td>{{ getTransactionType(transaction) }}</td>
-<td>{{ getOtherAccountId(transaction) }}</td>
-<td [ngClass]="getAmountClass(transaction)">
-
-                  {{ getFormattedAmount(transaction) }}
-</td>
-<td>{{ transaction.status }}</td>
-</tr>
-</tbody>
-</table>
- 
-          <!-- Back Button -->
-<div class="text-center mt-3">
-<button class="btn btn-outline-secondary" (click)="goBack()">Back</button>
-</div>
-</div>
-</div>
- 
+<div class="page-wrapper">
+  <div class="history-card">
+    <div class="card-header">
+      <div class="header-icon">📜</div>
+      <h1>Transaction History</h1>
+      <p>Account #{{ currentAccountId }}</p>
     </div>
-</div>
-</div>
 
- 
+    <div class="filter-row">
+      <button class="filter-btn" [class.active]="activeFilter === 'all'"
+              (click)="filterTransactions('all')">All</button>
+      <button class="filter-btn sent" [class.active]="activeFilter === 'sent'"
+              (click)="filterTransactions('sent')">Sent</button>
+      <button class="filter-btn received" [class.active]="activeFilter === 'received'"
+              (click)="filterTransactions('received')">Received</button>
+    </div>
+
+    <div class="error-box" *ngIf="errorMsg">
+      <span>⚠️</span> {{ errorMsg }}
+    </div>
+
+    <div class="empty-state" *ngIf="!errorMsg && filteredTransactions.length === 0">
+      <p>No transactions found.</p>
+    </div>
+
+    <div class="transaction-list" *ngIf="filteredTransactions.length > 0">
+      <div class="tx-row" *ngFor="let tx of filteredTransactions">
+        <div class="tx-left">
+          <div class="tx-icon" [class.sent]="tx.fromAccountId === currentAccountId"
+                               [class.received]="tx.toAccountId === currentAccountId">
+            {{ tx.fromAccountId === currentAccountId ? '↑' : '↓' }}
+          </div>
+          <div class="tx-info">
+            <p class="tx-type">{{ tx.fromAccountId === currentAccountId ? 'Sent to' : 'Received from' }}
+              <strong>Account #{{ getOtherAccountId(tx) }}</strong>
+            </p>
+            <p class="tx-date">{{ formatDate(tx.createdOn) }}</p>
+            <p class="tx-status" [class.success]="tx.status === 'SUCCESS'" [class.failed]="tx.status === 'FAILED'">
+              {{ tx.status }}
+            </p>
+          </div>
+        </div>
+        <div class="tx-amount" [class.debit]="tx.fromAccountId === currentAccountId"
+                                [class.credit]="tx.toAccountId === currentAccountId">
+          {{ tx.fromAccountId === currentAccountId ? '-' : '+' }}₹{{ tx.amount | number:'1.2-2' }}
+        </div>
+      </div>
+    </div>
+
+    <button class="back-btn" (click)="goBack()">← Back to Dashboard</button>
+  </div>
+</div>

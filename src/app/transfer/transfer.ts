@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Transferrequest } from '../transferrequest';
 import { Transferservice } from '../transferservice';
 import { Transferresponse } from '../transferresponse';
@@ -11,12 +11,10 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './transfer.html',
   styleUrls: ['./transfer.css'],
 })
-export class Transfer {
+export class Transfer implements OnInit {
+
   isSuccess: any = null;
   statusMessage: any = null;
-  showBackButton: boolean = false;
-
-  // Optional cap to match your previous patterns
   readonly MAX_AMOUNT = 100000;
 
   transferreq: Transferrequest = {
@@ -34,11 +32,6 @@ export class Transfer {
     amount: 0,
   };
 
-  errorresp: ErrorResponse = {
-    errorCode: '',
-    message: '',
-  };
-
   constructor(
     private service: Transferservice,
     private route: ActivatedRoute,
@@ -47,96 +40,86 @@ export class Transfer {
   ) {}
 
   ngOnInit(): void {
-    this.showBackButton = true;
     this.route.paramMap.subscribe((param) => {
       this.transferreq.fromId = Number(param.get('id'));
       this.cd.detectChanges();
     });
   }
 
-  // ---------- Simple validators (template-driven friendly) ----------
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   private isInteger(value: any): boolean {
     return /^-?\d+$/.test(String(value).trim());
   }
 
   private isValidAmount(value: any): boolean {
-    // number with up to 2 decimals, positive
     return /^\d+(\.\d{1,2})?$/.test(String(value).trim()) && Number(value) > 0;
   }
 
   private validate(): boolean {
-    // Basic required checks
-    if (this.transferreq.toId === null || this.transferreq.toId === undefined || String(this.transferreq.toId).trim() === '') {
+    if (!this.transferreq.toId || String(this.transferreq.toId).trim() === '') {
       this.isSuccess = false;
-      this.statusMessage = 'Please enter the recipient account id.';
+      this.statusMessage = 'Please enter the recipient account ID.';
       return false;
     }
-    if (this.transferreq.amount === null || this.transferreq.amount === undefined || String(this.transferreq.amount).trim() === '') {
+    if (!this.transferreq.amount || String(this.transferreq.amount).trim() === '') {
       this.isSuccess = false;
       this.statusMessage = 'Please enter the amount.';
       return false;
     }
-
-    // Type/format checks
     if (!this.isInteger(this.transferreq.toId) || Number(this.transferreq.toId) < 1) {
       this.isSuccess = false;
-      this.statusMessage = 'Account id must be a valid integer and at least 1.';
+      this.statusMessage = 'Recipient account ID must be a valid number.';
       return false;
     }
-
     if (!this.isValidAmount(this.transferreq.amount)) {
       this.isSuccess = false;
-      this.statusMessage = 'Amount must be a positive number with up to 2 decimal places.';
+      this.statusMessage = 'Amount must be a positive number (e.g. 500 or 500.50).';
       return false;
     }
-
-    const numAmount = Number(this.transferreq.amount);
-    if (numAmount > this.MAX_AMOUNT) {
+    if (Number(this.transferreq.amount) > this.MAX_AMOUNT) {
       this.isSuccess = false;
-      this.statusMessage = `Amount exceeds the maximum allowed (${this.MAX_AMOUNT}).`;
+      this.statusMessage = `Amount cannot exceed ₹${this.MAX_AMOUNT.toLocaleString()}.`;
       return false;
     }
-
-    // Cross-field: cannot transfer to same account
     if (Number(this.transferreq.fromId) === Number(this.transferreq.toId)) {
       this.isSuccess = false;
       this.statusMessage = 'You cannot transfer to the same account.';
       return false;
     }
-
-    // All good
     return true;
   }
-  // -----------------------------------------------------------------
 
   transferMoney() {
-    // Keep your flow, just guard invalid input first
     if (!this.validate()) {
       this.cd.detectChanges();
       return;
     }
 
+    // Generate a unique idempotency key for each new transfer attempt
+    this.transferreq.idempotencyKey = this.generateUUID();
+
     this.service.transferMoney(this.transferreq).subscribe({
       next: (resp: Transferresponse | ErrorResponse) => {
         if (resp && 'transactionId' in resp) {
-          console.log(resp);
           this.transferresp = resp as Transferresponse;
           this.isSuccess = true;
-          this.statusMessage = 'Transfer successful!';
-          this.cd.detectChanges();
+          this.statusMessage = `✅ Transfer successful! ₹${this.transferresp.amount.toLocaleString()} sent to Account #${this.transferresp.creditedTo}.`;
         } else {
-          // In case backend returns error-like body on 200
-          const err = resp as ErrorResponse;
           this.isSuccess = false;
-          this.statusMessage = 'Transaction Failed! ' + (err?.message ?? '');
-          this.cd.detectChanges();
+          this.statusMessage = 'Transfer failed: ' + ((resp as ErrorResponse)?.message ?? '');
         }
+        this.cd.detectChanges();
       },
       error: (err) => {
-        console.log(err);
-        this.errorresp = err?.error ?? { errorCode: '', message: 'Unknown error' };
         this.isSuccess = false;
-        this.statusMessage = 'Transaction Failed! ' + (this.errorresp?.message ?? '');
+        this.statusMessage = 'Transfer failed: ' + (err?.error?.message ?? 'Unknown error. Please try again.');
         this.cd.detectChanges();
       },
     });
